@@ -43,7 +43,7 @@ import "./node_modules/tone/build/Tone.js";
   
     // parent array to hold each row subarray
     const rows = [];
-  
+    const columns = [];
     for (const note of notes) {
       // declare the subarray
       const row = [];
@@ -58,11 +58,23 @@ import "./node_modules/tone/build/Tone.js";
       }
       rows.push(row);
     }
-  
+    for (const note of notes) {
+      const column = [];
+      for (let i = 0; i < 8; i++){
+        column.push({
+          note: note,
+          isActive: false
+        })
+      }
+      columns.push(column);
+    }
+    
     // we now have 6 rows each containing 16 eighth notes
-    return rows;
+  
+    return rows, columns;
   };
   
+
   const synths = makeSynths(6);
   
   // declaring the notes for each row
@@ -92,18 +104,22 @@ import "./node_modules/tone/build/Tone.js";
   
   const makeSequencer = () => {
     const sequencer = document.getElementById("sequencer");
-    grid.forEach((row, rowIndex) => {
+    grid.forEach((row, rowIndex, column, columnIndex) => {
       const seqRow = document.createElement("div");
       seqRow.id = `rowIndex`;
       seqRow.className = "sequencer-row";
+      const seqCol = document.createElement("div");
+      seqCol.id = `columnIndex`;
+      seqCol.className = "sequencer-column";
   
-      row.forEach((note, noteIndex) => {
+      row.forEach((note, noteIndex, columnIndex) => {
         const button = document.createElement("button");
         button.className = "note"
         button.addEventListener("click", function(e) {
           handleNoteClick(rowIndex, noteIndex, e);
         });
-  
+        
+   
         seqRow.appendChild(button);
       });
   
